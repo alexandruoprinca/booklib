@@ -1,6 +1,6 @@
 use chrono::NaiveDate;
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub enum Genre {
     Horror,
     Fantasy,
@@ -8,7 +8,7 @@ pub enum Genre {
     Crime,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub enum Language {
     English,
     Romanian,
@@ -16,22 +16,22 @@ pub enum Language {
     French,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct CoverInfo {
-    title: String,
-    author: String,
+    pub title: String,
+    pub author: String,
     edition: String,
     release_date: NaiveDate,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct Book {
-    cover_info: CoverInfo,
+    pub cover_info: CoverInfo,
     genre: Genre,
     language: Language,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct BookMetadata {
     start_read_date: NaiveDate,
     finish_read_date: NaiveDate,
@@ -39,9 +39,10 @@ pub struct BookMetadata {
     borrowed: bool,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct LibraryEntry {
-    book: Book,
+    id: u64,
+    pub book: Book,
     metadata: BookMetadata,
 }
 
@@ -82,8 +83,24 @@ impl BookMetadata {
     }
 }
 
+fn id_generator() -> u64 {
+    static mut CURRENT_VALUE: u64 = 0;
+    unsafe {
+        CURRENT_VALUE += 1;
+        CURRENT_VALUE
+    }
+}
+
 impl LibraryEntry {
     pub fn new(book: Book, metadata: BookMetadata) -> Self {
-        Self { book, metadata }
+        Self {
+            id: id_generator(),
+            book,
+            metadata,
+        }
+    }
+
+    pub fn id(&self) -> u64 {
+        self.id
     }
 }

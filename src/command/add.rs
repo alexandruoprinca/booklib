@@ -3,26 +3,23 @@ use crate::{library_entry::LibraryEntry, repository::Repository};
 use super::Command;
 
 pub struct AddCommand<'a> {
-    bookname: String,
-    repo: &'a dyn Repository<LibraryEntry>,
+    repo: &'a mut dyn Repository<LibraryEntry>,
+    args: &'a clap::ArgMatches
 }
 
 impl AddCommand<'_> {
-    pub fn new<'a>(bookname: String, repo: &'a dyn Repository<LibraryEntry>) -> AddCommand<'a> {
+    pub fn new<'a>(repo: &'a mut dyn Repository<LibraryEntry>, args: &'a clap::ArgMatches) -> AddCommand<'a> {
         AddCommand {
-            bookname: bookname,
-            repo: repo,
+            repo,
+            args
         }
-    }
-
-    pub fn bookname(&self) -> &str {
-        &self.bookname
     }
 }
 
 impl Command for AddCommand<'_> {
     fn execute(&mut self) -> bool {
-        println!("Executing add command with parameter {}", self.bookname);
+        println!("Executing add command with parameter");
+        self.repo.create(LibraryEntry::default());
         true
     }
 
