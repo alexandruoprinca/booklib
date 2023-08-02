@@ -11,7 +11,7 @@ use repository::LibraryEntriesRepository;
 
 use crate::{command::CommandType, command_factory::CommandFactory, repository::Repository};
 
-fn fillRepoWithDummyData(repo: &mut Box<dyn Repository<library_entry::LibraryEntry>>) {
+fn fill_repo_with_dummy_data(repo: &mut Box<dyn Repository<library_entry::LibraryEntry>>) {
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title1", "Author1", "Edition1", NaiveDate::default()),
@@ -67,9 +67,9 @@ fn main() {
     let mut repo: Box<dyn Repository<library_entry::LibraryEntry>> =
         Box::new(LibraryEntriesRepository::new());
 
-    fillRepoWithDummyData(&mut repo);
+    fill_repo_with_dummy_data(&mut repo);
 
-    let matches = command!()
+    let matches: clap::ArgMatches = command!()
         .propagate_version(true)
         .subcommand_required(true)
         .arg_required_else_help(true)
@@ -80,9 +80,10 @@ fn main() {
                 .arg(arg!(--"title" <String>))
                 .arg(arg!(--"read")),
         )
-        .subcommand(ArgCommand::new("list")
+        .subcommand(
+            ArgCommand::new("list")
                 .about("List books")
-                .arg(arg!(--"author" <String>))
+                .arg(arg!(--"author" <String>)),
         )
         .get_matches();
 

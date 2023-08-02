@@ -5,6 +5,7 @@ use core::fmt;
 
 pub use add::AddCommand;
 pub use list::ListCommand;
+pub use add::AddCommandArgs;
 
 pub enum CommandType {
     ADD,
