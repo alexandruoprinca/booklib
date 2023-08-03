@@ -1,13 +1,12 @@
 extern crate strum;
-use strum_macros::{IntoStaticStr};
+use strum_macros::IntoStaticStr;
 
 use crate::{library_entry::LibraryEntry, repository::Repository};
 
 use super::Command;
 
-
 #[derive(IntoStaticStr)]
-pub enum AddCommandArgs{
+pub enum AddCommandArgs {
     title,
     author,
 }
@@ -19,9 +18,7 @@ pub struct AddCommand<'a> {
 }
 
 impl AddCommand<'_> {
-    pub fn new<'a>(
-        repo: &'a mut dyn Repository<LibraryEntry>,
-    ) -> AddCommandBuilder<'a> {
+    pub fn new<'a>(repo: &'a mut dyn Repository<LibraryEntry>) -> AddCommandBuilder<'a> {
         AddCommandBuilder {
             repo,
             title_: None,

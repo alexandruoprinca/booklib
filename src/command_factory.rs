@@ -1,5 +1,5 @@
 use crate::{
-    command::{AddCommand, Command, CommandType, ListCommand, AddCommandArgs},
+    command::{AddCommand, AddCommandArgs, Command, CommandType, ListCommand, ListCommandArgs},
     library_entry::LibraryEntry,
     repository::Repository,
 };
@@ -14,7 +14,7 @@ impl CommandFactory {
     ) -> Box<dyn Command + 'a> {
         match command_type {
             CommandType::ADD => Self::create_add_command(repo, args),
-            CommandType::LIST => Box::new(ListCommand::new(repo, args)),
+            CommandType::LIST => Self::create_list_command(repo, args),
         }
     }
 
@@ -24,12 +24,33 @@ impl CommandFactory {
     ) -> Box<dyn Command + 'a> {
         let mut builder = AddCommand::new(repo);
         if args.contains_id(AddCommandArgs::title.into()) {
-            builder = builder.title(args.get_one::<String>(AddCommandArgs::title.into()).unwrap().to_string());
+            builder = builder.title(
+                args.get_one::<String>(AddCommandArgs::title.into())
+                    .unwrap()
+                    .to_string(),
+            );
         }
         if args.contains_id(AddCommandArgs::author.into()) {
-            builder = builder.author(args.get_one::<String>(AddCommandArgs::author.into()).unwrap().to_string());
+            builder = builder.author(
+                args.get_one::<String>(AddCommandArgs::author.into())
+                    .unwrap()
+                    .to_string(),
+            );
         }
 
+        Box::new(builder.build())
+    }
+
+    pub fn create_list_command<'a>(
+        repo: &'a mut dyn Repository<LibraryEntry>,
+        args: &'a clap::ArgMatches,
+    ) -> Box<dyn Command + 'a> {
+        let mut builder = ListCommand::new(repo);
+        if args.contains_id(ListCommandArgs::author.into()){
+            builder = builder.by_author(
+                args.get_one::<String>(ListCommandArgs::author.into()).unwrap().to_string()
+            )
+        }
         Box::new(builder.build())
     }
 }
