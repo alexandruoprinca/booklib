@@ -14,8 +14,8 @@ impl CommandFactory {
         args: Box<dyn ArgumentsProvider>,
     ) -> Box<dyn Command + 'a> {
         match command_type {
-            CommandType::ADD => Self::create_add_command(repo, args.as_ref()),
-            CommandType::LIST => Self::create_list_command(repo, args.as_ref()),
+            CommandType::ADD => Self::create_add_command(repo, args),
+            CommandType::LIST => Self::create_list_command(repo, args),
         }
     }
 
@@ -42,9 +42,9 @@ impl CommandFactory {
     //     Box::new(builder.build())
     // }
 
-    pub fn create_add_command<'a>(
+    fn create_add_command<'a>(
         repo: &'a mut dyn Repository<LibraryEntry>,
-        args: &dyn ArgumentsProvider,
+        args: Box<dyn ArgumentsProvider>,
     ) -> Box<dyn Command + 'a> {
         let mut builder = AddCommand::new(repo);
         if args.argument_exists(AddCommandArgs::title.into()) {
@@ -78,9 +78,9 @@ impl CommandFactory {
     //     Box::new(builder.build())
     // }
 
-    pub fn create_list_command<'a>(
+    fn create_list_command<'a>(
         repo: &'a mut dyn Repository<LibraryEntry>,
-        args: &dyn ArgumentsProvider,
+        args: Box<dyn ArgumentsProvider>,
     ) -> Box<dyn Command + 'a> {
         let mut builder = ListCommand::new(repo);
         if args.argument_exists(ListCommandArgs::author.into()) {
