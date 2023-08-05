@@ -28,7 +28,6 @@ impl Repository<LibraryEntry> for LibraryEntriesRepository {
     fn delete(&mut self, id: u64) {
         if let Some(position) = self.data.iter().position(|x| x.id() == id) {
             self.data.remove(position);
-
         }
     }
 
