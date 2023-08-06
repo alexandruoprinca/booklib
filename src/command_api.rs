@@ -12,7 +12,7 @@ pub fn list(author: Option<String>, read: Option<bool>, state: &State<App>) {
     let shared_data = state.inner();
     let mut repo_lock = shared_data.repo.lock().unwrap();
     let mut command =
-        CommandFactory::new_command(CommandType::LIST, repo_lock.as_mut(), Box::new(args));
+        CommandFactory::create_list_command(repo_lock.as_mut(), Box::new(args));
 
     command.execute();
 }
@@ -22,7 +22,7 @@ pub fn add(title: Option<String>, author: Option<String>, state: &State<App>) {
     let args = ArgumentsProviderRequest::new();
     let mut repo_lock = state.repo.lock().unwrap();
     let mut command =
-        CommandFactory::new_command(CommandType::ADD, repo_lock.as_mut(), Box::new(args));
+        CommandFactory::create_add_command(repo_lock.as_mut(), Box::new(args));
 
     command.execute();
 }
