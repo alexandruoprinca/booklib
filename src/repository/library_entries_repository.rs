@@ -1,5 +1,7 @@
+use chrono::NaiveDate;
+
 use super::Repository;
-use crate::library_entry::LibraryEntry;
+use crate::library_entry::*;
 
 pub struct LibraryEntriesRepository {
     data: Vec<LibraryEntry>,
@@ -7,7 +9,9 @@ pub struct LibraryEntriesRepository {
 
 impl LibraryEntriesRepository {
     pub fn new() -> Self {
-        Self { data: Vec::new() }
+        let mut repo = Self { data: Vec::new() };
+        fill_repo_with_dummy_data(&mut repo);
+        repo
     }
 }
 
@@ -34,4 +38,56 @@ impl Repository<LibraryEntry> for LibraryEntriesRepository {
     fn get_all(&self) -> &Vec<LibraryEntry> {
         &self.data
     }
+}
+
+fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
+    let library_entry = LibraryEntry::new(
+        Book::new(
+            CoverInfo::new("Title1", "Author1", "Edition1", NaiveDate::default()),
+            Genre::Horror,
+            Language::French,
+        ),
+        BookMetadata::default(),
+    );
+    repo.create(library_entry);
+
+    let library_entry = LibraryEntry::new(
+        Book::new(
+            CoverInfo::new("Title2", "Author1", "Edition1", NaiveDate::default()),
+            Genre::Horror,
+            Language::French,
+        ),
+        BookMetadata::default(),
+    );
+    repo.create(library_entry);
+
+    let library_entry = LibraryEntry::new(
+        Book::new(
+            CoverInfo::new("Title3", "Author1", "Edition1", NaiveDate::default()),
+            Genre::Horror,
+            Language::French,
+        ),
+        BookMetadata::default(),
+    );
+    repo.create(library_entry);
+
+    let library_entry = LibraryEntry::new(
+        Book::new(
+            CoverInfo::new("Title4", "Author2", "Edition2", NaiveDate::default()),
+            Genre::Horror,
+            Language::French,
+        ),
+        BookMetadata::default(),
+    );
+    repo.create(library_entry);
+
+    let library_entry = LibraryEntry::new(
+        Book::new(
+            CoverInfo::new("Title5", "Author3", "Edition1", NaiveDate::default()),
+            Genre::Horror,
+            Language::French,
+        ),
+        BookMetadata::default(),
+    );
+    repo.create(library_entry);
 }
