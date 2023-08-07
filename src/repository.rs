@@ -2,7 +2,7 @@ mod library_entries_repository;
 
 pub use library_entries_repository::LibraryEntriesRepository;
 
-pub trait Repository<T> : Send + Sync {
+pub trait Repository<T>: Send + Sync {
     fn find(&self, id: u64) -> Option<T>;
     fn create(&mut self, item: T);
     fn update(&mut self, item: T);

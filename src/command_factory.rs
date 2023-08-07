@@ -2,6 +2,7 @@ use crate::{
     arguments_provider::ArgumentsProvider,
     command::{AddCommand, AddCommandArgs, Command, CommandType, ListCommand, ListCommandArgs},
     library_entry::LibraryEntry,
+    list_output_handler::ListOutputHandler,
     repository::Repository,
 };
 
@@ -45,8 +46,9 @@ impl CommandFactory {
     pub fn create_list_command<'a>(
         repo: &'a mut dyn Repository<LibraryEntry>,
         args: Box<dyn ArgumentsProvider>,
+        printer: &'a mut dyn ListOutputHandler,
     ) -> Box<dyn Command + 'a> {
-        let mut builder = ListCommand::new(repo);
+        let mut builder = ListCommand::new(repo, printer);
         if args.argument_exists(ListCommandArgs::author.into()) {
             builder = builder.by_author(
                 args.get_argument_string(ListCommandArgs::author.into())

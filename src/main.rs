@@ -3,6 +3,7 @@ mod command;
 mod command_api;
 mod command_factory;
 mod library_entry;
+mod list_output_handler;
 mod repository;
 
 use std::sync::Mutex;

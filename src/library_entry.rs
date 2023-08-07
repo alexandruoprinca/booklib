@@ -1,6 +1,7 @@
 use chrono::NaiveDate;
+use serde::Serialize;
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub enum Genre {
     Horror,
     Fantasy,
@@ -8,7 +9,7 @@ pub enum Genre {
     Crime,
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub enum Language {
     English,
     Romanian,
@@ -16,7 +17,7 @@ pub enum Language {
     French,
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub struct CoverInfo {
     pub title: String,
     pub author: String,
@@ -24,14 +25,14 @@ pub struct CoverInfo {
     release_date: NaiveDate,
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub struct Book {
     pub cover_info: CoverInfo,
     genre: Genre,
     language: Language,
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub struct BookMetadata {
     start_read_date: NaiveDate,
     finish_read_date: NaiveDate,
@@ -39,7 +40,7 @@ pub struct BookMetadata {
     borrowed: bool,
 }
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Serialize)]
 pub struct LibraryEntry {
     id: u64,
     pub book: Book,
