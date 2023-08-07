@@ -1,8 +1,10 @@
+use std::collections::HashMap;
+
 use rocket::State;
 
 use crate::{
     arguments_provider::ArgumentsProviderRequest,
-    command::{CommandType, ListCommand},
+    command::{AddCommandArgs, CommandType, ListCommand, ListCommandArgs},
     command_factory::CommandFactory,
     list_output_handler::{ConsoleOutputHandler, JsonOutputHandler, ListOutputHandler},
     App,
@@ -16,8 +18,15 @@ pub fn list(
     read: Option<bool>,
     state: &State<App>,
 ) -> content::RawJson<String> {
-    let args = ArgumentsProviderRequest::new();
-    println!("Author is {}", author.unwrap());
+    let mut map: HashMap<&str, String> = HashMap::default();
+    if let Some(x) = author {
+        map.insert(ListCommandArgs::author.into(), x);
+    }
+    if let Some(x) = read {
+        map.insert(ListCommandArgs::read.into(), x.to_string());
+    }
+    let args = ArgumentsProviderRequest::new(map);
+
     let shared_data = state.inner();
     let mut repo_lock = shared_data.repo.lock().unwrap();
     let mut console_output_handler: Box<JsonOutputHandler> = Box::new(JsonOutputHandler::new());
@@ -37,7 +46,15 @@ pub fn list(
 
 #[get("/?<title>&<author>")]
 pub fn add(title: Option<String>, author: Option<String>, state: &State<App>) {
-    let args = ArgumentsProviderRequest::new();
+    let mut map: HashMap<&str, String> = HashMap::default();
+    if let Some(x) = title {
+        map.insert(AddCommandArgs::title.into(), x);
+    }
+    if let Some(x) = author {
+        map.insert(AddCommandArgs::author.into(), x);
+    }
+    let args = ArgumentsProviderRequest::new(map);
+
     let mut repo_lock = state.repo.lock().unwrap();
     let mut command = CommandFactory::create_add_command(repo_lock.as_mut(), Box::new(args));
 

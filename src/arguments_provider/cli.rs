@@ -15,10 +15,6 @@ impl ArgumentsProvider for ArgumentsProviderCLI {
         self.args.get_one::<String>(id)
     }
 
-    fn get_argument_bool(&self, id: &str) -> Option<&bool> {
-        self.args.get_one::<bool>(id)
-    }
-
     fn argument_exists(&self, id: &str) -> bool {
         self.args.contains_id(id)
     }

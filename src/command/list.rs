@@ -9,6 +9,7 @@ use crate::{library_entry::LibraryEntry, repository::Repository};
 #[derive(IntoStaticStr)]
 pub enum ListCommandArgs {
     author,
+    read
 }
 
 pub struct ListCommand<'a> {
@@ -55,17 +56,13 @@ impl Command for ListCommand<'_> {
     fn execute(&mut self) -> bool {
         println!("Executing list command");
         println!("Repo size is {}", self.repo.get_all().len());
-        let mut result: Vec<LibraryEntry> = Vec::new();
-        // if let Some(author) = &self.author {
-        //     for entry in self.repo.get_all() {
-        //         if entry.book.cover_info.author == *author {
-        //             println!("{:?}", entry);
-        //         }
-        //     }
-        // }
-        for entry in self.repo.get_all() {
-            result.push(entry.clone());
+        let mut result: Vec<LibraryEntry> = self.repo.get_all().clone();
+        //Note to self:
+        //The syntax differs from the command_api calls because there the Option<String> is consumed, but here we cannot consume a self which is a &mut
+        if let Some(val) = self.author.as_mut() {
+            result.retain(|x| x.book.cover_info.author == *val);
         }
+
         self.output_handler.handle_list_output(&result);
         true
     }

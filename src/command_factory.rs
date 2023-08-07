@@ -9,17 +9,6 @@ use crate::{
 pub struct CommandFactory;
 
 impl CommandFactory {
-    // pub fn new_command<'a>(
-    //     command_type: CommandType,
-    //     repo: &'a mut dyn Repository<LibraryEntry>,
-    //     args: Box<dyn ArgumentsProvider>,
-    // ) -> Box<dyn Command + 'a> {
-    //     match command_type {
-    //         CommandType::ADD => Self::create_add_command(repo, args),
-    //         CommandType::LIST => Self::create_list_command(repo, args),
-    //     }
-    // }
-
     pub fn create_add_command<'a>(
         repo: &'a mut dyn Repository<LibraryEntry>,
         args: Box<dyn ArgumentsProvider>,
