@@ -7,8 +7,9 @@ use crate::{
     arguments_provider::ArgumentsProviderRequest,
     command::{AddCommandArgs, CommandType, ListCommand, ListCommandArgs},
     command_factory::CommandFactory,
+    library_entry::{Genre, Language},
     list_output_handler::{ConsoleOutputHandler, JsonOutputHandler, ListOutputHandler},
-    App, library_entry::{Language, Genre},
+    App,
 };
 
 use rocket::response::content;
@@ -69,14 +70,45 @@ pub fn list(
     rocket::response::content::RawJson(json.to_string())
 }
 
-#[get("/?<title>&<author>")]
-pub fn add(title: Option<String>, author: Option<String>, state: &State<App>) {
+#[get("/?<title>&<author>&<language>&<genre>&<read>&<edition>")]
+pub fn add(
+    title: Option<String>,
+    author: Option<String>,
+    language: Option<String>,
+    genre: Option<String>,
+    edition: Option<String>,
+    read: Option<bool>,
+    state: &State<App>,
+) {
     let mut map: HashMap<&str, String> = HashMap::default();
     if let Some(x) = title {
         map.insert(AddCommandArgs::title.into(), x);
     }
     if let Some(x) = author {
         map.insert(AddCommandArgs::author.into(), x);
+    }
+    if let Some(x) = language {
+        for value in Language::iter() {
+            if value.to_string() == x {
+                map.insert(AddCommandArgs::language.into(), x);
+                break;
+            }
+        }
+    }
+    if let Some(x) = genre {
+        for value in Genre::iter() {
+            if value.to_string() == x {
+                map.insert(AddCommandArgs::genre.into(), x);
+                break;
+            }
+        }
+    }
+    if let Some(x) = read {
+        println!("received read {}", x);
+        map.insert(AddCommandArgs::read.into(), x.to_string());
+    }
+    if let Some(x) = edition {
+        map.insert(AddCommandArgs::edition.into(), x);
     }
     let args = ArgumentsProviderRequest::new(map);
 

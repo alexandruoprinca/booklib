@@ -1,7 +1,10 @@
 extern crate strum;
 use strum_macros::IntoStaticStr;
 
-use crate::{library_entry::LibraryEntry, repository::Repository};
+use crate::{
+    library_entry::{Genre, Language, LibraryEntry},
+    repository::Repository,
+};
 
 use super::Command;
 
@@ -9,12 +12,20 @@ use super::Command;
 pub enum AddCommandArgs {
     title,
     author,
+    genre,
+    edition,
+    language,
+    read,
 }
 
 pub struct AddCommand<'a> {
     repo: &'a mut dyn Repository<LibraryEntry>,
     title: Option<String>,
     author: Option<String>,
+    genre: Option<Genre>,
+    edition: Option<String>,
+    language: Option<Language>,
+    read: Option<bool>,
 }
 
 impl AddCommand<'_> {
@@ -23,6 +34,10 @@ impl AddCommand<'_> {
             repo,
             title_: None,
             author_: None,
+            genre_: None,
+            edition_: None,
+            language_: None,
+            read_: None,
         }
     }
 }
@@ -30,17 +45,41 @@ impl AddCommand<'_> {
 pub struct AddCommandBuilder<'a> {
     title_: Option<String>,
     author_: Option<String>,
+    genre_: Option<Genre>,
+    edition_: Option<String>,
+    language_: Option<Language>,
+    read_: Option<bool>,
     repo: &'a mut dyn Repository<LibraryEntry>,
 }
 
 impl<'a> AddCommandBuilder<'a> {
-    pub fn title(mut self, title: String) -> Self {
+    pub fn title(&mut self, title: String) -> &Self {
         self.title_ = Some(title);
         self
     }
 
-    pub fn author(mut self, author: String) -> Self {
+    pub fn author(&mut self, author: String) -> &Self {
         self.author_ = Some(author);
+        self
+    }
+
+    pub fn edition(&mut self, edition: String) -> &Self {
+        self.edition_ = Some(edition);
+        self
+    }
+
+    pub fn genre(&mut self, genre: Genre) -> &Self {
+        self.genre_ = Some(genre);
+        self
+    }
+
+    pub fn language(&mut self, language: Language) -> &Self {
+        self.language_ = Some(language);
+        self
+    }
+
+    pub fn read(&mut self, read: bool) -> &Self {
+        self.read_ = Some(read);
         self
     }
 
@@ -49,6 +88,10 @@ impl<'a> AddCommandBuilder<'a> {
             repo: self.repo,
             title: self.title_,
             author: self.author_,
+            genre: self.genre_,
+            edition: self.edition_,
+            language: self.language_,
+            read: self.read_,
         }
     }
 }

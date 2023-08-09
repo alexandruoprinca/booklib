@@ -15,20 +15,54 @@ impl CommandFactory {
     ) -> Box<dyn Command + 'a> {
         let mut builder = AddCommand::new(repo);
         if args.argument_exists(AddCommandArgs::title.into()) {
-            builder = builder.title(
+            builder.title(
                 args.get_argument_string(AddCommandArgs::title.into())
                     .unwrap()
                     .to_string(),
             );
         }
         if args.argument_exists(AddCommandArgs::author.into()) {
-            builder = builder.author(
+            builder.author(
                 args.get_argument_string(AddCommandArgs::author.into())
                     .unwrap()
                     .to_string(),
             );
         }
-
+        if args.argument_exists(AddCommandArgs::edition.into()) {
+            builder.edition(
+                args.get_argument_string(AddCommandArgs::edition.into())
+                    .unwrap()
+                    .to_string(),
+            );
+        }
+        if args.argument_exists(ListCommandArgs::language.into()) {
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::language.into())
+                .unwrap()
+                .to_string();
+            if let Some(val) = Language::from_string(&arg_str) {
+                builder.language(val);
+            }
+        }
+        if args.argument_exists(ListCommandArgs::read.into()) {
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::read.into())
+                .unwrap()
+                .to_string();
+            let arg_bool: Result<bool, _> = arg_str.parse();
+            if arg_bool.is_ok() {
+                builder.read(arg_bool.ok().unwrap());
+            }
+        }
+        if args.argument_exists(ListCommandArgs::genre.into()) {
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::genre.into())
+                .unwrap()
+                .to_string();
+            if let Some(val) = Genre::from_string(&arg_str) {
+                builder.genre(val);
+            }
+        }
         Box::new(builder.build())
     }
 
@@ -39,11 +73,11 @@ impl CommandFactory {
     ) -> Box<dyn Command + 'a> {
         let mut builder = ListCommand::new(repo, printer);
         if args.argument_exists(ListCommandArgs::author.into()) {
-            builder = builder.by_author(
+            builder.by_author(
                 args.get_argument_string(ListCommandArgs::author.into())
                     .unwrap()
                     .to_string(),
-            )
+            );
         }
 
         if args.argument_exists(ListCommandArgs::genre.into()) {
@@ -52,16 +86,16 @@ impl CommandFactory {
                 .unwrap()
                 .to_string();
             if let Some(val) = Genre::from_string(&arg_str) {
-                builder = builder.by_genre(val);
+                builder.by_genre(val);
             }
         }
 
         if args.argument_exists(ListCommandArgs::edition.into()) {
-            builder = builder.by_edition(
+            builder.by_edition(
                 args.get_argument_string(ListCommandArgs::edition.into())
                     .unwrap()
                     .to_string(),
-            )
+            );
         }
 
         if args.argument_exists(ListCommandArgs::language.into()) {
@@ -70,15 +104,18 @@ impl CommandFactory {
                 .unwrap()
                 .to_string();
             if let Some(val) = Language::from_string(&arg_str) {
-                builder = builder.by_language(val);
+                builder.by_language(val);
             }
         }
 
         if args.argument_exists(ListCommandArgs::read.into()) {
-            let arg_str = args.get_argument_string(ListCommandArgs::read.into()).unwrap().to_string();
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::read.into())
+                .unwrap()
+                .to_string();
             let arg_bool: Result<bool, _> = arg_str.parse();
             if arg_bool.is_ok() {
-                builder = builder.by_read(arg_bool.ok().unwrap());
+                builder.by_read(arg_bool.ok().unwrap());
             }
         }
 

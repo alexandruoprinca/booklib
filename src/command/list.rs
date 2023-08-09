@@ -69,28 +69,28 @@ impl<'a> ListCommandBuilder<'a> {
             output_handler: self.output_handler_,
         }
     }
-  
-    pub fn by_genre(mut self, genre: Genre) -> Self {
+
+    pub fn by_genre(&mut self, genre: Genre) -> &Self {
         self.genre_ = Some(genre);
         self
     }
- 
-    pub fn by_author(mut self, author: String) -> Self {
+
+    pub fn by_author(&mut self, author: String) -> &Self {
         self.author_ = Some(author);
         self
     }
 
-    pub fn by_edition(mut self, edition: String) -> Self {
+    pub fn by_edition(&mut self, edition: String) -> &Self {
         self.edition_ = Some(edition);
         self
     }
 
-    pub fn by_language(mut self, language: Language) -> Self {
+    pub fn by_language(&mut self, language: Language) -> &Self {
         self.language_ = Some(language);
         self
     }
 
-    pub fn by_read(mut self, read: bool) -> Self {
+    pub fn by_read(&mut self, read: bool) -> &Self {
         self.read_ = Some(read);
         self
     }
