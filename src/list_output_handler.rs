@@ -26,7 +26,6 @@ pub struct JsonOutputHandler {
 
 impl ListOutputHandler for JsonOutputHandler {
     fn handle_list_output(&mut self, entries_to_be_printed: &Vec<LibraryEntry>) {
-        println!("{:?}", entries_to_be_printed);
         let json = serde_json::to_value(&entries_to_be_printed);
         self.json = json.ok().unwrap();
     }

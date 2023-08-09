@@ -1,21 +1,25 @@
 use std::collections::HashMap;
 
 use rocket::State;
+use strum::IntoEnumIterator;
 
 use crate::{
     arguments_provider::ArgumentsProviderRequest,
     command::{AddCommandArgs, CommandType, ListCommand, ListCommandArgs},
     command_factory::CommandFactory,
     list_output_handler::{ConsoleOutputHandler, JsonOutputHandler, ListOutputHandler},
-    App,
+    App, library_entry::{Language, Genre},
 };
 
 use rocket::response::content;
 
-#[get("/?<author>&<read>")]
+#[get("/?<author>&<read>&<edition>&<genre>&<language>")]
 pub fn list(
     author: Option<String>,
     read: Option<bool>,
+    edition: Option<String>,
+    genre: Option<String>,
+    language: Option<String>,
     state: &State<App>,
 ) -> content::RawJson<String> {
     let mut map: HashMap<&str, String> = HashMap::default();
@@ -23,8 +27,29 @@ pub fn list(
         map.insert(ListCommandArgs::author.into(), x);
     }
     if let Some(x) = read {
+        println!("received read {}", x);
         map.insert(ListCommandArgs::read.into(), x.to_string());
     }
+    if let Some(x) = edition {
+        map.insert(ListCommandArgs::edition.into(), x);
+    }
+    if let Some(x) = genre {
+        for value in Genre::iter() {
+            if value.to_string() == x {
+                map.insert(ListCommandArgs::genre.into(), x);
+                break;
+            }
+        }
+    }
+    if let Some(x) = language {
+        for value in Language::iter() {
+            if value.to_string() == x {
+                map.insert(ListCommandArgs::language.into(), x);
+                break;
+            }
+        }
+    }
+
     let args = ArgumentsProviderRequest::new(map);
 
     let shared_data = state.inner();

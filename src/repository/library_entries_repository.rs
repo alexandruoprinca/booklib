@@ -44,8 +44,8 @@ fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title1", "Author1", "Edition1", NaiveDate::default()),
-            Genre::Horror,
-            Language::French,
+            Genre::horror,
+            Language::french,
         ),
         BookMetadata::default(),
     );
@@ -54,8 +54,8 @@ fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title2", "Author1", "Edition1", NaiveDate::default()),
-            Genre::Horror,
-            Language::French,
+            Genre::horror,
+            Language::french,
         ),
         BookMetadata::default(),
     );
@@ -64,8 +64,8 @@ fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title3", "Author1", "Edition1", NaiveDate::default()),
-            Genre::Horror,
-            Language::French,
+            Genre::horror,
+            Language::french,
         ),
         BookMetadata::default(),
     );
@@ -74,18 +74,18 @@ fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title4", "Author2", "Edition2", NaiveDate::default()),
-            Genre::Horror,
-            Language::French,
+            Genre::crime,
+            Language::french,
         ),
-        BookMetadata::default(),
+        BookMetadata { start_read_date: NaiveDate::default(), finish_read_date: NaiveDate::default(), read: true, borrowed: false }
     );
     repo.create(library_entry);
 
     let library_entry = LibraryEntry::new(
         Book::new(
             CoverInfo::new("Title5", "Author3", "Edition1", NaiveDate::default()),
-            Genre::Horror,
-            Language::French,
+            Genre::horror,
+            Language::french,
         ),
         BookMetadata::default(),
     );

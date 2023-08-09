@@ -1,50 +1,78 @@
 use chrono::NaiveDate;
+use rocket::{http::RawStr, request::FromParam};
 use serde::Serialize;
+use strum::IntoEnumIterator;
+use strum_macros::{Display, EnumIter};
 
-#[derive(Default, Debug, Clone, Serialize)]
+//TODO: Alex
+// this can be remade as a procedural macro FromString that gets an enum from a string
+
+#[derive(Default, Debug, Clone, Serialize, Display, EnumIter, PartialEq)]
 pub enum Genre {
-    Horror,
-    Fantasy,
+    horror,
+    fantasy,
     #[default]
-    Crime,
+    crime,
 }
 
-#[derive(Default, Debug, Clone, Serialize)]
+impl Genre {
+    pub fn from_string(id: &str) -> Option<Genre> {
+        for value in Genre::iter() {
+            if value.to_string() == id {
+                return Some(value);
+            }
+        }
+        None
+    }
+}
+
+#[derive(Default, Debug, Clone, Serialize, Display, EnumIter, PartialEq)]
 pub enum Language {
-    English,
-    Romanian,
+    english,
+    romanian,
     #[default]
-    French,
+    french,
+}
+
+impl Language {
+    pub fn from_string(id: &str) -> Option<Language> {
+        for value in Language::iter() {
+            if value.to_string() == id {
+                return Some(value);
+            }
+        }
+        None
+    }
 }
 
 #[derive(Default, Debug, Clone, Serialize)]
 pub struct CoverInfo {
     pub title: String,
     pub author: String,
-    edition: String,
-    release_date: NaiveDate,
+    pub edition: String,
+    pub release_date: NaiveDate,
 }
 
 #[derive(Default, Debug, Clone, Serialize)]
 pub struct Book {
     pub cover_info: CoverInfo,
-    genre: Genre,
-    language: Language,
+    pub genre: Genre,
+    pub language: Language,
 }
 
 #[derive(Default, Debug, Clone, Serialize)]
 pub struct BookMetadata {
-    start_read_date: NaiveDate,
-    finish_read_date: NaiveDate,
-    read: bool,
-    borrowed: bool,
+    pub start_read_date: NaiveDate,
+    pub finish_read_date: NaiveDate,
+    pub read: bool,
+    pub borrowed: bool,
 }
 
 #[derive(Default, Debug, Clone, Serialize)]
 pub struct LibraryEntry {
     id: u64,
     pub book: Book,
-    metadata: BookMetadata,
+    pub metadata: BookMetadata,
 }
 
 impl CoverInfo {
@@ -84,18 +112,10 @@ impl BookMetadata {
     }
 }
 
-fn id_generator() -> u64 {
-    static mut CURRENT_VALUE: u64 = 0;
-    unsafe {
-        CURRENT_VALUE += 1;
-        CURRENT_VALUE
-    }
-}
-
 impl LibraryEntry {
     pub fn new(book: Book, metadata: BookMetadata) -> Self {
         Self {
-            id: id_generator(),
+            id: Self::id_generator(),
             book,
             metadata,
         }
@@ -103,5 +123,13 @@ impl LibraryEntry {
 
     pub fn id(&self) -> u64 {
         self.id
+    }
+
+    fn id_generator() -> u64 {
+        static mut CURRENT_VALUE: u64 = 0;
+        unsafe {
+            CURRENT_VALUE += 1;
+            CURRENT_VALUE
+        }
     }
 }

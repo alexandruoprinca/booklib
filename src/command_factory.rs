@@ -1,7 +1,7 @@
 use crate::{
     arguments_provider::ArgumentsProvider,
     command::{AddCommand, AddCommandArgs, Command, CommandType, ListCommand, ListCommandArgs},
-    library_entry::LibraryEntry,
+    library_entry::{Genre, Language, LibraryEntry},
     list_output_handler::ListOutputHandler,
     repository::Repository,
 };
@@ -45,6 +45,43 @@ impl CommandFactory {
                     .to_string(),
             )
         }
+
+        if args.argument_exists(ListCommandArgs::genre.into()) {
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::genre.into())
+                .unwrap()
+                .to_string();
+            if let Some(val) = Genre::from_string(&arg_str) {
+                builder = builder.by_genre(val);
+            }
+        }
+
+        if args.argument_exists(ListCommandArgs::edition.into()) {
+            builder = builder.by_edition(
+                args.get_argument_string(ListCommandArgs::edition.into())
+                    .unwrap()
+                    .to_string(),
+            )
+        }
+
+        if args.argument_exists(ListCommandArgs::language.into()) {
+            let arg_str = args
+                .get_argument_string(ListCommandArgs::language.into())
+                .unwrap()
+                .to_string();
+            if let Some(val) = Language::from_string(&arg_str) {
+                builder = builder.by_language(val);
+            }
+        }
+
+        if args.argument_exists(ListCommandArgs::read.into()) {
+            let arg_str = args.get_argument_string(ListCommandArgs::read.into()).unwrap().to_string();
+            let arg_bool: Result<bool, _> = arg_str.parse();
+            if arg_bool.is_ok() {
+                builder = builder.by_read(arg_bool.ok().unwrap());
+            }
+        }
+
         Box::new(builder.build())
     }
 }
