@@ -14,6 +14,13 @@ impl CommandFactory {
         args: Box<dyn ArgumentsProvider>,
     ) -> Box<dyn Command + 'a> {
         let mut builder = AddCommand::new(repo);
+
+        //TODO: alex
+        //currently in command factory i am parsing through the args manually
+        //add command would also have to parse these manually, so 3 places where the data is being parsed
+        //these args were also parsed manually when creating the object
+        //maybe an alternative would be to find a way to iterate through all the elements in the map while also storing the type
+
         if args.argument_exists(AddCommandArgs::title.into()) {
             builder.title(
                 args.get_argument_string(AddCommandArgs::title.into())
