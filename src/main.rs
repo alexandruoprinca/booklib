@@ -32,35 +32,3 @@ fn rocket() -> _ {
         .manage(state);
     _rocket
 }
-
-// let matches: clap::ArgMatches = command!()
-//     .propagate_version(true)
-//     .subcommand_required(true)
-//     .arg_required_else_help(true)
-//     .subcommand(
-//         ArgCommand::new("add")
-//             .about("Adds files to myapp")
-//             .arg(arg!(--"author" <String>))
-//             .arg(arg!(--"title" <String>))
-//             .arg(arg!(--"read")),
-//     )
-//     .subcommand(
-//         ArgCommand::new("list")
-//             .about("List books")
-//             .arg(arg!(--"author" <String>)),
-//     )
-//     .get_matches();
-
-// let mut command = match matches.subcommand() {
-//     Some(("add", matches)) => {
-//         let command_args = arguments_provider::ArgumentsProviderCLI::new(matches.clone());
-//         CommandFactory::new_command(CommandType::ADD, repo.as_mut(), Box::new(command_args))
-//     }
-//     Some(("list", matches)) => {
-//         let command_args = arguments_provider::ArgumentsProviderCLI::new(matches.clone());
-//         CommandFactory::new_command(CommandType::LIST, repo.as_mut(), Box::new(command_args))
-//     }
-//     _ => unreachable!("Wrong command"),
-// };
-
-// command.execute();
