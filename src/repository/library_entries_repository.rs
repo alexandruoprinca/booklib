@@ -77,7 +77,12 @@ fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
             Genre::crime,
             Language::french,
         ),
-        BookMetadata { start_read_date: NaiveDate::default(), finish_read_date: NaiveDate::default(), read: true, borrowed: false }
+        BookMetadata {
+            start_read_date: NaiveDate::default(),
+            finish_read_date: NaiveDate::default(),
+            read: true,
+            borrowed: false,
+        },
     );
     repo.create(library_entry);
 

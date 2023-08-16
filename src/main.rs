@@ -1,4 +1,3 @@
-mod arguments_provider;
 mod command;
 mod command_api;
 mod command_factory;

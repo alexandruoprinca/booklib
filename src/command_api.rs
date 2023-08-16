@@ -4,8 +4,7 @@ use rocket::State;
 use strum::IntoEnumIterator;
 
 use crate::{
-    arguments_provider::ArgumentsProviderRequest,
-    command::{AddCommandArgs, CommandType, ListCommand, ListCommandArgs},
+    command::{AddCommandOptions, CommandType, ListCommand, ListCommandOptions},
     command_factory::CommandFactory,
     library_entry::{Genre, Language},
     list_output_handler::{ConsoleOutputHandler, JsonOutputHandler, ListOutputHandler},
@@ -23,21 +22,21 @@ pub fn list(
     language: Option<String>,
     state: &State<App>,
 ) -> content::RawJson<String> {
-    let mut map: HashMap<&str, String> = HashMap::default();
+    let mut options: Vec<ListCommandOptions> = Vec::new();
     if let Some(x) = author {
-        map.insert(ListCommandArgs::author.into(), x);
+        options.push(ListCommandOptions::author(x));
     }
     if let Some(x) = read {
         println!("received read {}", x);
-        map.insert(ListCommandArgs::read.into(), x.to_string());
+        options.push(ListCommandOptions::read(x));
     }
     if let Some(x) = edition {
-        map.insert(ListCommandArgs::edition.into(), x);
+        options.push(ListCommandOptions::edition(x));
     }
     if let Some(x) = genre {
         for value in Genre::iter() {
             if value.to_string() == x {
-                map.insert(ListCommandArgs::genre.into(), x);
+                options.push(ListCommandOptions::genre(value));
                 break;
             }
         }
@@ -45,13 +44,11 @@ pub fn list(
     if let Some(x) = language {
         for value in Language::iter() {
             if value.to_string() == x {
-                map.insert(ListCommandArgs::language.into(), x);
+                options.push(ListCommandOptions::language(value));
                 break;
             }
         }
     }
-
-    let args = ArgumentsProviderRequest::new(map);
 
     let shared_data = state.inner();
     let mut repo_lock = shared_data.repo.lock().unwrap();
@@ -59,7 +56,7 @@ pub fn list(
     {
         let mut command = CommandFactory::create_list_command(
             repo_lock.as_mut(),
-            Box::new(args),
+            options,
             console_output_handler.as_mut(),
         );
 
@@ -80,17 +77,17 @@ pub fn add(
     read: Option<bool>,
     state: &State<App>,
 ) {
-    let mut map: HashMap<&str, String> = HashMap::default();
+    let mut options: Vec<AddCommandOptions> = Vec::new();
     if let Some(x) = title {
-        map.insert(AddCommandArgs::title.into(), x);
+        options.push(AddCommandOptions::title(x));
     }
     if let Some(x) = author {
-        map.insert(AddCommandArgs::author.into(), x);
+        options.push(AddCommandOptions::author(x));
     }
     if let Some(x) = language {
         for value in Language::iter() {
             if value.to_string() == x {
-                map.insert(AddCommandArgs::language.into(), x);
+                options.push(AddCommandOptions::language(value));
                 break;
             }
         }
@@ -98,22 +95,21 @@ pub fn add(
     if let Some(x) = genre {
         for value in Genre::iter() {
             if value.to_string() == x {
-                map.insert(AddCommandArgs::genre.into(), x);
+                options.push(AddCommandOptions::genre(value));
                 break;
             }
         }
     }
     if let Some(x) = read {
         println!("received read {}", x);
-        map.insert(AddCommandArgs::read.into(), x.to_string());
+        options.push(AddCommandOptions::read(x));
     }
     if let Some(x) = edition {
-        map.insert(AddCommandArgs::edition.into(), x);
+        options.push(AddCommandOptions::edition(x));
     }
-    let args = ArgumentsProviderRequest::new(map);
 
     let mut repo_lock = state.repo.lock().unwrap();
-    let mut command = CommandFactory::create_add_command(repo_lock.as_mut(), Box::new(args));
+    let mut command = CommandFactory::create_add_command(repo_lock.as_mut(), options);
 
     command.execute();
 }

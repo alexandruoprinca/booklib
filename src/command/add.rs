@@ -7,105 +7,50 @@ use crate::{
 };
 
 use super::Command;
-
-#[derive(IntoStaticStr)]
-pub enum AddCommandArgs {
-    title,
-    author,
-    genre,
-    edition,
-    language,
-    read,
+pub enum AddCommandOptions {
+    title(String),
+    author(String),
+    genre(Genre),
+    edition(String),
+    language(Language),
+    read(bool),
 }
 
 pub struct AddCommand<'a> {
     repo: &'a mut dyn Repository<LibraryEntry>,
-    title: Option<String>,
-    author: Option<String>,
-    genre: Option<Genre>,
-    edition: Option<String>,
-    language: Option<Language>,
-    read: Option<bool>,
+    options: Vec<AddCommandOptions>,
 }
 
 impl AddCommand<'_> {
     pub fn new<'a>(repo: &'a mut dyn Repository<LibraryEntry>) -> AddCommandBuilder<'a> {
         AddCommandBuilder {
             repo,
-            title_: None,
-            author_: None,
-            genre_: None,
-            edition_: None,
-            language_: None,
-            read_: None,
+            command_options: Vec::default(),
         }
     }
 }
 
 pub struct AddCommandBuilder<'a> {
-    title_: Option<String>,
-    author_: Option<String>,
-    genre_: Option<Genre>,
-    edition_: Option<String>,
-    language_: Option<Language>,
-    read_: Option<bool>,
+    command_options: Vec<AddCommandOptions>,
     repo: &'a mut dyn Repository<LibraryEntry>,
 }
 
 impl<'a> AddCommandBuilder<'a> {
-    pub fn title(&mut self, title: String) -> &Self {
-        self.title_ = Some(title);
-        self
-    }
-
-    pub fn author(&mut self, author: String) -> &Self {
-        self.author_ = Some(author);
-        self
-    }
-
-    pub fn edition(&mut self, edition: String) -> &Self {
-        self.edition_ = Some(edition);
-        self
-    }
-
-    pub fn genre(&mut self, genre: Genre) -> &Self {
-        self.genre_ = Some(genre);
-        self
-    }
-
-    pub fn language(&mut self, language: Language) -> &Self {
-        self.language_ = Some(language);
-        self
-    }
-
-    pub fn read(&mut self, read: bool) -> &Self {
-        self.read_ = Some(read);
-        self
-    }
-
     pub fn build(self) -> AddCommand<'a> {
         AddCommand {
             repo: self.repo,
-            title: self.title_,
-            author: self.author_,
-            genre: self.genre_,
-            edition: self.edition_,
-            language: self.language_,
-            read: self.read_,
+            options: self.command_options,
         }
+    }
+
+    pub fn add_option(&mut self, option: AddCommandOptions) {
+        self.command_options.push(option);
     }
 }
 
 impl Command for AddCommand<'_> {
     fn execute(&mut self) -> bool {
         println!("Executing add command with parameter");
-        if let Some(title) = &self.title {
-            println!("Adding Entry with title {}", title);
-        }
-
-        if let Some(author) = &self.author {
-            println!("Adding Entry with author {}", author);
-        }
         self.repo.create(LibraryEntry::default());
         true
     }

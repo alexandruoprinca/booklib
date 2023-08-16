@@ -3,10 +3,8 @@ mod list;
 
 use core::fmt;
 
-pub use add::AddCommand;
-pub use add::AddCommandArgs;
-pub use list::ListCommand;
-pub use list::ListCommandArgs;
+pub use add::*;
+pub use list::*;
 
 pub enum CommandType {
     ADD,
