@@ -43,10 +43,10 @@ impl ListCommand<'_> {
     ) -> Vec<LibraryEntry> {
         entries.retain(|x| match option {
             ListCommandOptions::author(author_val) => x.book.cover_info.author == *author_val,
-            ListCommandOptions::genre(genre_val) => x.book.genre == *genre_val,
-            ListCommandOptions::edition(edition_val) => x.book.cover_info.edition == *edition_val,
-            ListCommandOptions::language(language_val) => x.book.language == *language_val,
-            ListCommandOptions::read(read_val) => x.metadata.read == *read_val,
+            ListCommandOptions::genre(genre_val) => x.book.genre == Some(*genre_val),
+            ListCommandOptions::edition(edition_val) => x.book.cover_info.edition.as_ref() == Some(&(*edition_val)),
+            ListCommandOptions::language(language_val) => x.book.language == Some(*language_val),
+            ListCommandOptions::read(read_val) => x.metadata.read == Some(*read_val),
         });
         entries
     }

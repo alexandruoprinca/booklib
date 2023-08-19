@@ -13,6 +13,8 @@ use crate::{
 
 use rocket::response::content;
 
+//TODO: this can work in a RESTful way where book is the resource
+
 #[get("/?<author>&<read>&<edition>&<genre>&<language>")]
 pub fn list(
     author: Option<String>,

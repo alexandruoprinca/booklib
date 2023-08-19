@@ -41,58 +41,36 @@ impl Repository<LibraryEntry> for LibraryEntriesRepository {
 }
 
 fn fill_repo_with_dummy_data(repo: &mut LibraryEntriesRepository) {
-    let library_entry = LibraryEntry::new(
-        Book::new(
-            CoverInfo::new("Title1", "Author1", "Edition1", NaiveDate::default()),
-            Genre::horror,
-            Language::french,
-        ),
-        BookMetadata::default(),
-    );
+    let library_entry = LibraryEntry::new("Title1".to_string(), "Author1".to_string())
+    .genre(Genre::horror)
+    .language(Language::french)
+    .read(false)
+    .build();
     repo.create(library_entry);
 
-    let library_entry = LibraryEntry::new(
-        Book::new(
-            CoverInfo::new("Title2", "Author1", "Edition1", NaiveDate::default()),
-            Genre::horror,
-            Language::french,
-        ),
-        BookMetadata::default(),
-    );
+    let library_entry = LibraryEntry::new("Title2".to_string(), "Author1".to_string())
+    .genre(Genre::horror)
+    .language(Language::french)
+    .read(true)
+    .build();
     repo.create(library_entry);
 
-    let library_entry = LibraryEntry::new(
-        Book::new(
-            CoverInfo::new("Title3", "Author1", "Edition1", NaiveDate::default()),
-            Genre::horror,
-            Language::french,
-        ),
-        BookMetadata::default(),
-    );
+    let library_entry = LibraryEntry::new("Title3".to_string(), "Author1".to_string())
+    .genre(Genre::horror)
+    .language(Language::french)
+    .build();
     repo.create(library_entry);
 
-    let library_entry = LibraryEntry::new(
-        Book::new(
-            CoverInfo::new("Title4", "Author2", "Edition2", NaiveDate::default()),
-            Genre::crime,
-            Language::french,
-        ),
-        BookMetadata {
-            start_read_date: NaiveDate::default(),
-            finish_read_date: NaiveDate::default(),
-            read: true,
-            borrowed: false,
-        },
-    );
+    let library_entry = LibraryEntry::new("Title4".to_string(), "Author2".to_string())
+    .genre(Genre::crime)
+    .language(Language::french)
+    .read(true)
+    .build();
     repo.create(library_entry);
 
-    let library_entry = LibraryEntry::new(
-        Book::new(
-            CoverInfo::new("Title5", "Author3", "Edition1", NaiveDate::default()),
-            Genre::horror,
-            Language::french,
-        ),
-        BookMetadata::default(),
-    );
+    let library_entry = LibraryEntry::new("Title5".to_string(), "Author3".to_string())
+    .genre(Genre::horror)
+    .language(Language::french)
+    .build();
     repo.create(library_entry);
 }
